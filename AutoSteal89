@@ -1,70 +1,85 @@
--- Delta Executor: AutoSteal8989 Private Hub
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("PRIVATE HUB: AutoSteal8989", "Midnight")
+local Window = Library.CreateLib("ADMIN TROLL: AutoSteal8989", "Midnight")
 
--- PASSWORD PROTECTION
-local Auth = Window:NewTab("Auth")
-local AuthSec = Auth:NewSection("Enter Private Code")
+-- AUTHENTICATION
+local Auth = Window:NewTab("Login")
+local AuthSec = Auth:NewSection("Enter Private Key")
+local IsUnlocked = false
 
-AuthSec:NewTextBox("Enter Code", "Type AutoSteal8989 here", function(txt)
+AuthSec:NewTextBox("Key:", "Code here", function(txt)
     if txt == "AutoSteal8989" then
-        print("Access Granted")
-        -- You can now access the other tabs
-    else
-        print("Access Denied")
+        IsUnlocked = true
+        print("Hub Unlocked!")
     end
 end)
 
--- STEALING TAB
-local StealTab = Window:NewTab("Stealing")
-local SSec = StealTab:NewSection("Roof-Drop Steal")
+-- STEALER TAB
+local Steal = Window:NewTab("Stealer")
+local SSec = Steal:NewSection("Roof Drop System")
 
-SSec:NewButton("Set Collection Spot", "Stand at your roof/pad", function()
-    _G.DropPoint = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+SSec:NewButton("1. Set Roof Target", "Stand on roof above pad", function()
+    if not IsUnlocked then return end
+    _G.RoofPos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 end)
 
-SSec:NewToggle("Auto-Snatch to Roof", "Teleports items to drop point", function(state)
-    _G.Snatch = state
-    while _G.Snatch do
-        task.wait(0.5)
-        pcall(function()
-            if _G.DropPoint then
-                for _, v in pairs(game.Workspace:GetChildren()) do
-                    if v:IsA("Model") and (v.Name:find("Brainrot") or v.Name:find("Item")) then
-                        local item = v.PrimaryPart or v:FindFirstChild("Handle")
-                        if item then
-                            -- Moves item to your roof so it drops down
-                            item.CFrame = _G.DropPoint
-                        end
-                    end
-                end
+SSec:NewToggle("2. Active Snatch", "Teleports items to drop point", function(state)
+    if not IsUnlocked then return end
+    _G.Snatching = state
+    while _G.Snatching do
+        task.wait(0.4)
+        for _, v in pairs(game.Workspace:GetChildren()) do
+            if v:IsA("Model") and (v.Name:find("Brainrot") or v.Name:find("Item")) then
+                local p = v.PrimaryPart or v:FindFirstChild("Handle")
+                if p and _G.RoofPos then p.CFrame = _G.RoofPos end
             end
-        end)
+        end
     end
 end)
 
--- LIVE TROLLING / FAKE ROBUX
-local LiveTab = Window:NewTab("Live Trolling")
-local LSec = LiveTab:NewSection("Fake Stats")
+-- SHOP TROLL TAB
+local Shop = Window:NewTab("Live Shop")
+local LSec = Shop:NewSection("Fake Gifting UI")
 
-LSec:NewButton("Generate Fake Robux", "Chooses 50k - 1M randomly", function()
-    local randomRobux = math.random(50000, 1000000)
-    -- This changes the text on your screen (Visual Only for Live)
-    pcall(function()
-        local robuxLabel = game.Players.LocalPlayer.PlayerGui:FindFirstChild("RobuxLabel", true) 
-        if robuxLabel then
-            robuxLabel.Text = tostring(randomRobux)
-        end
-    end)
-    print("Visual Robux set to: " .. randomRobux)
+local function ShowFakeRobuxBox()
+    -- Creates the little box you asked for
+    local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+    local Frame = Instance.new("Frame", ScreenGui)
+    local Label = Instance.new("TextLabel", Frame)
+    local Amount = Instance.new("TextLabel", Frame)
+    
+    Frame.Size = UDim2.new(0, 200, 0, 100)
+    Frame.Position = UDim2.new(0.5, -100, 0.4, -50)
+    Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Frame.BorderSizePixel = 2
+    
+    Label.Text = "Robux Amount:"
+    Label.Size = UDim2.new(1, 0, 0, 30)
+    Label.TextColor3 = Color3.new(1, 1, 1)
+    Label.BackgroundTransparency = 1
+    
+    Amount.Text = tostring(math.random(50000, 1000000)) .. " R$"
+    Amount.Size = UDim2.new(1, 0, 0, 50)
+    Amount.Position = UDim2.new(0, 0, 0, 40)
+    Amount.TextColor3 = Color3.fromRGB(0, 255, 100)
+    Amount.TextSize = 25
+    Amount.BackgroundTransparency = 1
+    
+    task.wait(3) -- Disappears after 3 seconds
+    ScreenGui:Destroy()
+end
+
+LSec:NewButton("Fake Admin Panel Gift", "Shows Robux box + Chat Message", function()
+    if not IsUnlocked then return end
+    ShowFakeRobuxBox()
+    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Gifting Admin Panel... Processing Robux...", "All")
+    task.wait(2)
+    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SUCCESS]: Admin Panel Gifted!", "All")
 end)
 
-LSec:NewButton("Fake Gift Admin Panel", "Sends fake chat message", function()
-    local msg = "[SYSTEM]: User " .. game.Players.LocalPlayer.Name .. " has gifted Admin Panel to the server!"
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
-end)
-
-LSec:NewButton("Fake Gift Magic Carpet", "Sends fake chat message", function()
-    local msg = "[SYSTEM]: User " .. game.Players.LocalPlayer.Name .. " has gifted Magic Carpet to the server!"
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
+LSec:NewButton("Fake Magic Carpet Gift", "Shows Robux box + Chat Message", function()
+    if not IsUnlocked then return end
+    ShowFakeRobuxBox()
+    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Gifting Magic Carpet... Processing Robux...", "All")
+    task.wait(2)
+    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SUCCESS]: Magic Carpet Gifted!", "All")
 end)
