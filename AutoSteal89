@@ -1,75 +1,99 @@
--- Delta Executor: Fake Gifting & Robux Hub
+ -- Delta Executor: AutoSteal8989 Streamer Edition
 local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
 local Main = Instance.new("Frame", ScreenGui)
-Main.Size = UDim2.new(0, 250, 0, 180)
-Main.Position = UDim2.new(0.1, 0, 0.5, -90) -- Kept to the side so it's not in the way
-Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Main.BorderSizePixel = 2
-Main.Active = true
-Main.Draggable = true
+local ToggleBtn = Instance.new("TextButton", ScreenGui)
 
-local Title = Instance.new("TextLabel", Main)
-Title.Text = "LIVE TROLL HUB"
-Title.Size = UDim2.new(1, 0, 0, 40)
-Title.TextColor3 = Color3.new(1, 1, 1)
-Title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+-- 1. THE TOGGLE BUTTON (Small & Hidden)
+ToggleBtn.Size = UDim2.new(0, 40, 0, 40)
+ToggleBtn.Position = UDim2.new(0, 10, 0.5, -20) -- Left side of screen
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ToggleBtn.Text = "B"
+ToggleBtn.TextColor3 = Color3.new(1, 1, 1)
+ToggleBtn.Draggable = true -- You can move it anywhere
 
--- THE TARGET BOX (Type the person's name here)
-local TargetInput = Instance.new("TextBox", Main)
-TargetInput.PlaceholderText = "Victim Name..."
-TargetInput.Size = UDim2.new(0.9, 0, 0, 35)
-TargetInput.Position = UDim2.new(0.05, 0, 0.25, 0)
-TargetInput.Text = ""
+local Corner = Instance.new("UICorner", ToggleBtn)
+Corner.CornerRadius = Height.new(1, 0) -- Makes it a circle
 
--- THE FAKE ROBUX BOX FUNCTION
-local function ShowRobuxWanted()
-    local RGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
-    local RF = Instance.new("Frame", RGui)
-    RF.Size = UDim2.new(0, 240, 0, 110)
-    RF.Position = UDim2.new(0.5, -120, 0.3, 0)
-    RF.BackgroundColor3 = Color3.new(0, 0, 0)
-    RF.BorderSizePixel = 3
-    
-    local RT = Instance.new("TextLabel", RF)
-    RT.Text = "ROBUX WANTED:"
-    RT.Size = UDim2.new(1, 0, 0, 35)
-    RT.TextColor3 = Color3.new(1, 1, 1)
-    RT.TextSize = 18
-    
-    local RA = Instance.new("TextLabel", RF)
-    RA.Text = tostring(math.random(50000, 1000000)) .. " R$"
-    RA.Size = UDim2.new(1, 0, 0, 50)
-    RA.Position = UDim2.new(0, 0, 0.45, 0)
-    RA.TextColor3 = Color3.fromRGB(0, 255, 100)
-    RA.TextSize = 28
-    
-    task.wait(3.5)
-    RGui:Destroy()
-end
-
--- GIFT ADMIN BUTTON
-local GiftAdmin = Instance.new("TextButton", Main)
-GiftAdmin.Text = "Fake Gift: Admin Panel"
-GiftAdmin.Size = UDim2.new(0.9, 0, 0, 35)
-GiftAdmin.Position = UDim2.new(0.05, 0, 0.5, 0)
-GiftAdmin.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
-
-GiftAdmin.MouseButton1Click:Connect(function()
-    ShowRobuxWanted()
-    local victim = TargetInput.Text ~= "" and TargetInput.Text or "Player"
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Gifted Admin Panel to " .. victim .. "!", "All")
-    print("Acting complete. Block them now!")
+ToggleBtn.MouseButton1Click:Connect(function()
+    Main.Visible = not Main.Visible
 end)
 
--- GIFT CARPET BUTTON
-local GiftCarpet = Instance.new("TextButton", Main)
-GiftCarpet.Text = "Fake Gift: Magic Carpet"
-GiftCarpet.Size = UDim2.new(0.9, 0, 0, 35)
-GiftCarpet.Position = UDim2.new(0.05, 0, 0.75, 0)
-GiftCarpet.BackgroundColor3 = Color3.fromRGB(200, 100, 0)
+-- 2. MAIN MENU SETUP
+Main.Size = UDim2.new(0, 220, 0, 160)
+Main.Position = UDim2.new(0.5, -110, 0.5, -80)
+Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Main.BorderSizePixel = 0
+Main.Visible = true
 
-GiftCarpet.MouseButton1Click:Connect(function()
-    ShowRobuxWanted()
-    local victim = TargetInput.Text ~= "" and TargetInput.Text or "Player"
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Gifted Magic Carpet to " .. victim .. "!", "All")
+local Title = Instance.new("TextLabel", Main)
+Title.Text = "AUTOSTEAL8989 HUB"
+Title.Size = UDim2.new(1, 0, 0, 35)
+Title.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+Title.TextColor3 = Color3.new(1, 1, 1)
+
+-- 3. AUTO-STEAL LOGIC
+local StealBtn = Instance.new("TextButton", Main)
+StealBtn.Text = "Activate Roof-Steal"
+StealBtn.Size = UDim2.new(0.9, 0, 0, 35)
+StealBtn.Position = UDim2.new(0.05, 0, 0.25, 0)
+
+StealBtn.MouseButton1Click:Connect(function()
+    _G.Drop = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+    StealBtn.Text = "STEALING ACTIVE"
+    spawn(function()
+        while true do
+            task.wait(0.5)
+            for _, v in pairs(game.Workspace:GetChildren()) do
+                if v:IsA("Model") and (v.Name:find("Brainrot") or v.Name:find("Item")) then
+                    if v.PrimaryPart then v.PrimaryPart.CFrame = _G.Drop end
+                end
+            end
+        end
+    end)
+end)
+
+-- 4. FAKE ROBUX BANNER (Matches Video)
+local function ShowBanner()
+    local PopGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+    local Frame = Instance.new("Frame", PopGui)
+    Frame.Size = UDim2.new(0, 350, 0, 130)
+    Frame.Position = UDim2.new(0.5, -175, 0.3, 0)
+    Frame.BackgroundColor3 = Color3.new(1, 1, 1)
+    
+    local Top = Instance.new("TextLabel", Frame)
+    Top.Text = "ROBUX WANTED:"
+    Top.Size = UDim2.new(1, 0, 0, 40)
+    Top.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+    
+    local Amt = Instance.new("TextLabel", Frame)
+    Amt.Text = tostring(math.random(100000, 999999)) .. " R$"
+    Amt.Size = UDim2.new(1, 0, 0, 70)
+    Amt.Position = UDim2.new(0, 0, 0.4, 0)
+    Amt.TextColor3 = Color3.fromRGB(0, 200, 0)
+    Amt.TextSize = 40
+    Amt.Font = Enum.Font.SourceSansBold
+
+    task.wait(3.5)
+    PopGui:Destroy()
+end
+
+-- 5. GIFTING BUTTONS
+local GiftAP = Instance.new("TextButton", Main)
+GiftAP.Text = "Fake Gift: Admin Panel"
+GiftAP.Size = UDim2.new(0.9, 0, 0, 35)
+GiftAP.Position = UDim2.new(0.05, 0, 0.55, 0)
+
+GiftAP.MouseButton1Click:Connect(function()
+    ShowBanner()
+    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Admin Panel gifted! Account debited.", "All")
+end)
+
+local GiftCarp = Instance.new("TextButton", Main)
+GiftCarp.Text = "Fake Gift: Carpet"
+GiftCarp.Size = UDim2.new(0.9, 0, 0, 35)
+GiftCarp.Position = UDim2.new(0.05, 0, 0.8, 0)
+
+GiftCarp.MouseButton1Click:Connect(function()
+    ShowBanner()
+    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Magic Carpet gifted! Account debited.", "All")
 end)
