@@ -1,85 +1,75 @@
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("ADMIN TROLL: AutoSteal8989", "Midnight")
+-- Delta Executor: Fake Gifting & Robux Hub
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+local Main = Instance.new("Frame", ScreenGui)
+Main.Size = UDim2.new(0, 250, 0, 180)
+Main.Position = UDim2.new(0.1, 0, 0.5, -90) -- Kept to the side so it's not in the way
+Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Main.BorderSizePixel = 2
+Main.Active = true
+Main.Draggable = true
 
--- AUTHENTICATION
-local Auth = Window:NewTab("Login")
-local AuthSec = Auth:NewSection("Enter Private Key")
-local IsUnlocked = false
+local Title = Instance.new("TextLabel", Main)
+Title.Text = "LIVE TROLL HUB"
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 
-AuthSec:NewTextBox("Key:", "Code here", function(txt)
-    if txt == "AutoSteal8989" then
-        IsUnlocked = true
-        print("Hub Unlocked!")
-    end
-end)
+-- THE TARGET BOX (Type the person's name here)
+local TargetInput = Instance.new("TextBox", Main)
+TargetInput.PlaceholderText = "Victim Name..."
+TargetInput.Size = UDim2.new(0.9, 0, 0, 35)
+TargetInput.Position = UDim2.new(0.05, 0, 0.25, 0)
+TargetInput.Text = ""
 
--- STEALER TAB
-local Steal = Window:NewTab("Stealer")
-local SSec = Steal:NewSection("Roof Drop System")
-
-SSec:NewButton("1. Set Roof Target", "Stand on roof above pad", function()
-    if not IsUnlocked then return end
-    _G.RoofPos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-end)
-
-SSec:NewToggle("2. Active Snatch", "Teleports items to drop point", function(state)
-    if not IsUnlocked then return end
-    _G.Snatching = state
-    while _G.Snatching do
-        task.wait(0.4)
-        for _, v in pairs(game.Workspace:GetChildren()) do
-            if v:IsA("Model") and (v.Name:find("Brainrot") or v.Name:find("Item")) then
-                local p = v.PrimaryPart or v:FindFirstChild("Handle")
-                if p and _G.RoofPos then p.CFrame = _G.RoofPos end
-            end
-        end
-    end
-end)
-
--- SHOP TROLL TAB
-local Shop = Window:NewTab("Live Shop")
-local LSec = Shop:NewSection("Fake Gifting UI")
-
-local function ShowFakeRobuxBox()
-    -- Creates the little box you asked for
-    local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
-    local Frame = Instance.new("Frame", ScreenGui)
-    local Label = Instance.new("TextLabel", Frame)
-    local Amount = Instance.new("TextLabel", Frame)
+-- THE FAKE ROBUX BOX FUNCTION
+local function ShowRobuxWanted()
+    local RGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+    local RF = Instance.new("Frame", RGui)
+    RF.Size = UDim2.new(0, 240, 0, 110)
+    RF.Position = UDim2.new(0.5, -120, 0.3, 0)
+    RF.BackgroundColor3 = Color3.new(0, 0, 0)
+    RF.BorderSizePixel = 3
     
-    Frame.Size = UDim2.new(0, 200, 0, 100)
-    Frame.Position = UDim2.new(0.5, -100, 0.4, -50)
-    Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    Frame.BorderSizePixel = 2
+    local RT = Instance.new("TextLabel", RF)
+    RT.Text = "ROBUX WANTED:"
+    RT.Size = UDim2.new(1, 0, 0, 35)
+    RT.TextColor3 = Color3.new(1, 1, 1)
+    RT.TextSize = 18
     
-    Label.Text = "Robux Amount:"
-    Label.Size = UDim2.new(1, 0, 0, 30)
-    Label.TextColor3 = Color3.new(1, 1, 1)
-    Label.BackgroundTransparency = 1
+    local RA = Instance.new("TextLabel", RF)
+    RA.Text = tostring(math.random(50000, 1000000)) .. " R$"
+    RA.Size = UDim2.new(1, 0, 0, 50)
+    RA.Position = UDim2.new(0, 0, 0.45, 0)
+    RA.TextColor3 = Color3.fromRGB(0, 255, 100)
+    RA.TextSize = 28
     
-    Amount.Text = tostring(math.random(50000, 1000000)) .. " R$"
-    Amount.Size = UDim2.new(1, 0, 0, 50)
-    Amount.Position = UDim2.new(0, 0, 0, 40)
-    Amount.TextColor3 = Color3.fromRGB(0, 255, 100)
-    Amount.TextSize = 25
-    Amount.BackgroundTransparency = 1
-    
-    task.wait(3) -- Disappears after 3 seconds
-    ScreenGui:Destroy()
+    task.wait(3.5)
+    RGui:Destroy()
 end
 
-LSec:NewButton("Fake Admin Panel Gift", "Shows Robux box + Chat Message", function()
-    if not IsUnlocked then return end
-    ShowFakeRobuxBox()
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Gifting Admin Panel... Processing Robux...", "All")
-    task.wait(2)
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SUCCESS]: Admin Panel Gifted!", "All")
+-- GIFT ADMIN BUTTON
+local GiftAdmin = Instance.new("TextButton", Main)
+GiftAdmin.Text = "Fake Gift: Admin Panel"
+GiftAdmin.Size = UDim2.new(0.9, 0, 0, 35)
+GiftAdmin.Position = UDim2.new(0.05, 0, 0.5, 0)
+GiftAdmin.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
+
+GiftAdmin.MouseButton1Click:Connect(function()
+    ShowRobuxWanted()
+    local victim = TargetInput.Text ~= "" and TargetInput.Text or "Player"
+    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Gifted Admin Panel to " .. victim .. "!", "All")
+    print("Acting complete. Block them now!")
 end)
 
-LSec:NewButton("Fake Magic Carpet Gift", "Shows Robux box + Chat Message", function()
-    if not IsUnlocked then return end
-    ShowFakeRobuxBox()
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Gifting Magic Carpet... Processing Robux...", "All")
-    task.wait(2)
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SUCCESS]: Magic Carpet Gifted!", "All")
+-- GIFT CARPET BUTTON
+local GiftCarpet = Instance.new("TextButton", Main)
+GiftCarpet.Text = "Fake Gift: Magic Carpet"
+GiftCarpet.Size = UDim2.new(0.9, 0, 0, 35)
+GiftCarpet.Position = UDim2.new(0.05, 0, 0.75, 0)
+GiftCarpet.BackgroundColor3 = Color3.fromRGB(200, 100, 0)
+
+GiftCarpet.MouseButton1Click:Connect(function()
+    ShowRobuxWanted()
+    local victim = TargetInput.Text ~= "" and TargetInput.Text or "Player"
+    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("[SYSTEM]: Gifted Magic Carpet to " .. victim .. "!", "All")
 end)
